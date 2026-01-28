@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.services.db_service import get_db_connection
+from app.services.resolution_time_service import get_resolution_indicator
+
 
 grievance_bp = Blueprint("grievance_bp", __name__)
 
@@ -64,11 +66,18 @@ def my_grievances(student_id):
         rows = cursor.fetchall()
         conn.close()
 
+# Add RTCI indicator for each grievance
+        for g in rows:
+              g["rtci_status"] = get_resolution_indicator(g["created_at"], g["expected_resolution_days"])
+  
+
         return jsonify({
-            "status": "success ✅",
-            "student_id": student_id,
-            "grievances": rows
-        })
+             "status": "success ✅",
+             "student_id": student_id,
+             "grievances": rows
+   
+})
+
 
     except Exception as e:
         return jsonify({
