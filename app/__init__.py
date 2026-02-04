@@ -3,6 +3,8 @@ from app.services.db_service import get_db_connection
 from app.routes.auth_routes import auth_bp
 from app.routes.grievance_routes import grievance_bp
 from app.routes.masterdata_routes import masterdata_bp
+from app.routes.report_routes import report_bp
+
 
 
 
@@ -11,6 +13,8 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(grievance_bp)
     app.register_blueprint(masterdata_bp)
+    app.register_blueprint(report_bp)
+
 
 
 
