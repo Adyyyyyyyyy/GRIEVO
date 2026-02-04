@@ -54,3 +54,37 @@ def get_categories_by_department(department_id):
             "status": "failed ❌",
             "error": str(e)
         }), 500
+
+# ✅ Get all categories with department details
+@masterdata_bp.route("/categories", methods=["GET"])
+def get_all_categories():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT 
+                c.category_id,
+                c.category_name,
+                c.expected_resolution_days,
+                d.department_id,
+                d.department_name
+            FROM categories c
+            JOIN departments d ON c.department_id = d.department_id
+            ORDER BY d.department_name, c.category_name
+        """)
+
+        rows = cursor.fetchall()
+        conn.close()
+
+        return jsonify({
+            "status": "success ✅",
+            "categories": rows
+        })
+
+    except Exception as e:
+        return jsonify({
+            "status": "failed ❌",
+            "error": str(e)
+        }), 500
+
